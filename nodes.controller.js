@@ -23,6 +23,18 @@ async function removeNote(id) {
   console.log(chalk.bgRed('The note has been deleted!'))
 }
 
+async function editNote(editedNote) {
+  let notes = await getNotes()
+  notes = notes.map(note => {
+    if (note.id === editedNote.id) {
+      return editedNote
+    }
+    return note
+  })
+  await fs.writeFile('./db.json', JSON.stringify(notes))
+  console.log(chalk.bgBlue('The note has been edited!'))
+}
+
 async function getNotes() {
   const notes = await fs.readFile(notesPath, {encoding: 'utf-8'})
   return Array.isArray(JSON.parse(notes)) ? JSON.parse(notes) : []
@@ -38,5 +50,5 @@ async function printNotes() {
 }
 
 module.exports = {
-  addNote, printNotes, removeNote
+  addNote, removeNote, getNotes, editNote
 }
